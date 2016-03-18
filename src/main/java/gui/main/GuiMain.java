@@ -178,7 +178,7 @@ public class GuiMain extends Application implements MapComponentInitializedListe
 		for (int i = 1; i < lions.size(); i++) {
 			Point2D start = getPointFromLatLong(lions.get(i - 1).getLocLat(), lions.get(i - 1).getLocLong());
 			Point2D end = getPointFromLatLong(lions.get(i).getLocLat(), lions.get(i).getLocLong());
-			lineGroup.getChildren().add(createLine("line" + color.toString() + i, start.getX(), start.getY(), end.getX(), end.getY(), color, 2));
+			lineGroup.getChildren().add(createLine("line" + color.toString() + i, start.getX(), start.getY(), end.getX(), end.getY(), color, 0.5));
 		}
 		return lineGroup;
 	}

@@ -49,10 +49,12 @@ public class CEPMain {
 	}
 
 	private String compareTwoLionsStatement(String tagOne, String tagTwo) {
-		return "SELECT a.tagLocalIdentifier as LocalIdA, a.timestamp as TimestampA, b.tagLocalIdentifier as LocalIdB, b.timestamp as TimestampB, "
-				+ "b.locLat as LatitudeB, b.locLong as LongitudeB, a.locLat as LatitudeA, a.locLong as LongitudeA " + "FROM LionTick(tagLocalIdentifier = '"
-				+ tagOne + "').win:time(60 sec) as a, LionTick(tagLocalIdentifier = '" + tagTwo + "').win:time(60 sec) as b "
-				+ "WHERE a.locLong = b.locLong AND a.locLat = b.locLat AND a.timestamp.between(b.timestamp.minus(24 hours), b.timestamp.plus(24 hours))";
+		return "SELECT a.tagLocalIdentifier as LocalIdA, a.timestamp as TimestampA,  a.locLat as LatitudeA, a.locLong as LongitudeA," +
+				      "b.tagLocalIdentifier as LocalIdB, b.timestamp as TimestampB, b.locLat as LatitudeB, b.locLong as LongitudeB " + 
+				"FROM LionTick(tagLocalIdentifier = '" + tagOne + "').win:time(60 sec) as a, " +
+					 "LionTick(tagLocalIdentifier = '" + tagTwo + "').win:time(60 sec) as b " +
+				"WHERE a.locLong = b.locLong AND a.locLat = b.locLat " + 
+				"AND a.timestamp.between(b.timestamp.minus(24 hours), b.timestamp.plus(24 hours))";
 
 	}
 
