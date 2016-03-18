@@ -1,8 +1,6 @@
 package gui.main;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -232,7 +230,8 @@ public class GuiMain extends Application implements MapComponentInitializedListe
 		CEPMain em = new CEPMain();
 		em.runTest();
 		if (lionMap == null) {
-			lionMap = parseCSV();
+			Parser parser = new Parser(",");
+			lionMap = parser.parseCSV();
 			keySet = new ArrayList<>(lionMap.keySet());
 		}
 		mapView = new GoogleMapView();
@@ -242,35 +241,6 @@ public class GuiMain extends Application implements MapComponentInitializedListe
 		primaryStage.setResizable(false);
 		primaryStage.setScene(scene);
 		primaryStage.show();
-	}
-
-	private Map<String, List<Lion>> parseCSV() {
-		Parser parser = new Parser(",");
-		ClassLoader classLoader = getClass().getClassLoader();
-		List<Lion> lionList = parser.parseLion(classLoader.getResource("Tsavo_Lion_Study.csv").getFile());
-		Map<String, List<Lion>> lionMap = splitLions(lionList);
-		for (String lionKey : lionMap.keySet()) {
-			List<Lion> llist = lionMap.get(lionKey);
-			Collections.sort(llist);
-			lionMap.replace(lionKey, llist);
-		}
-		return lionMap;
-	}
-
-	private Map<String, List<Lion>> splitLions(List<Lion> lionList) {
-		Map<String, List<Lion>> lionMap = new HashMap<>();
-		for (Lion lion : lionList) {
-			if (lionMap.containsKey(lion.getTagLocalIdentifier())) {
-				List<Lion> llist = lionMap.get(lion.getTagLocalIdentifier());
-				llist.add(lion);
-				lionMap.replace(lion.getTagLocalIdentifier(), llist);
-			} else {
-				List<Lion> llist = new ArrayList<>();
-				llist.add(lion);
-				lionMap.put(lion.getTagLocalIdentifier(), llist);
-			}
-		}
-		return lionMap;
 	}
 
 	public static void main(String[] args) {

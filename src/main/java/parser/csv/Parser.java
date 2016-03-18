@@ -5,7 +5,10 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import cep.main.event.Lion;
 
@@ -19,6 +22,34 @@ public class Parser {
 
 	public Parser(String csvSplitBy) {
 		this.csvSplitBy = csvSplitBy;
+	}
+
+	public Map<String, List<Lion>> parseCSV() {
+		ClassLoader classLoader = getClass().getClassLoader();
+		List<Lion> lionList = parseLion(classLoader.getResource("Tsavo_Lion_Study.csv").getFile());
+		Map<String, List<Lion>> lionMap = splitLions(lionList);
+		for (String lionKey : lionMap.keySet()) {
+			List<Lion> llist = lionMap.get(lionKey);
+			Collections.sort(llist);
+			lionMap.replace(lionKey, llist);
+		}
+		return lionMap;
+	}
+
+	private Map<String, List<Lion>> splitLions(List<Lion> lionList) {
+		Map<String, List<Lion>> lionMap = new HashMap<>();
+		for (Lion lion : lionList) {
+			if (lionMap.containsKey(lion.getTagLocalIdentifier())) {
+				List<Lion> llist = lionMap.get(lion.getTagLocalIdentifier());
+				llist.add(lion);
+				lionMap.replace(lion.getTagLocalIdentifier(), llist);
+			} else {
+				List<Lion> llist = new ArrayList<>();
+				llist.add(lion);
+				lionMap.put(lion.getTagLocalIdentifier(), llist);
+			}
+		}
+		return lionMap;
 	}
 
 	public List<Lion> parseLion(String file) {
@@ -47,7 +78,7 @@ public class Parser {
 				}
 			}
 		}
-//		System.out.println("Done");
+		// System.out.println("Done");
 		return lionList;
 	}
 
@@ -75,9 +106,9 @@ public class Parser {
 	}
 
 	private String[] clearArray(String[] lionArray) {
-		for (int i = 0; i < lionArray.length; i++) 
-			if(lionArray[i].contains("\""))
-				lionArray[i] = lionArray[i].substring(1, lionArray[i].length()-1);
+		for (int i = 0; i < lionArray.length; i++)
+			if (lionArray[i].contains("\""))
+				lionArray[i] = lionArray[i].substring(1, lionArray[i].length() - 1);
 		return lionArray;
 	}
 
